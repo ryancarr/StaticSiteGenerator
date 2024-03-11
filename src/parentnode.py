@@ -1,10 +1,10 @@
 from htmlnode import HTMLNode
 
 class ParentNode(HTMLNode):
-    def __init__(self, tag: str, children: list):
+    def __init__(self, tag: str, children: list) -> object:
         super().__init__(tag, None, children, None)
     
-    def to_html(self):
+    def to_html(self) -> str:
         if self.tag is None:
             raise ValueError('tag is not optional')
         if self.children is None or self.children == []:
