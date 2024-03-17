@@ -5,6 +5,7 @@ from inline_markdown import (
     split_nodes_delimiter,
     split_nodes_image,
     split_nodes_links,
+    text_to_textnodes,
     )
 
 from textnode import (
@@ -118,6 +119,21 @@ class TestInlineMarkdown(unittest.TestCase):
                                      TextNode('google', text_type_link, 'https://www.google.com'),
                                      TextNode(" and another ", text_type_text),
                                      TextNode('facebook', text_type_link, 'https://www.facebook.com')]
+                                     )
+        
+    def test_text_to_textnodes(self):
+        text = 'This is **text** with an *italic* word and a `code block` and an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://boot.dev)'
+        new_nodes = text_to_textnodes(text)
+        self.assertEqual(new_nodes, [TextNode("This is ", text_type_text),
+                                     TextNode("text", text_type_bold),
+                                     TextNode(" with an ", text_type_text),
+                                     TextNode("italic", text_type_italic),
+                                     TextNode(" word and a ", text_type_text),
+                                     TextNode("code block", text_type_code),
+                                     TextNode(" and an ", text_type_text),
+                                     TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+                                     TextNode(" and a ", text_type_text),
+                                     TextNode("link", text_type_link, "https://boot.dev"),]
                                      )
 
 if __name__ == '__main__':
