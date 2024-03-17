@@ -2,15 +2,19 @@ import unittest
 from inline_markdown import (
     extract_markdown_images,
     extract_markdown_links,
-    split_nodes_delimiter
+    split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_links,
     )
 
 from textnode import (
     TextNode,
     text_type_bold,
     text_type_code,
+    text_type_image,
     text_type_italic,
-    text_type_text    
+    text_type_link,
+    text_type_text
 )
 
 
@@ -97,7 +101,24 @@ class TestInlineMarkdown(unittest.TestCase):
             [('link', 'https://www.example.com'), ('another', 'https://www.example.com/another')],
             extract_markdown_links(text)                        
         )
-
+    
+    def test_split_image(self):
+        node = TextNode('This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)', text_type_text)
+        new_nodes = split_nodes_image([node])
+        self.assertEqual(new_nodes, [TextNode("This is text with an ", text_type_text),
+                                     TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+                                     TextNode(" and another ", text_type_text),
+                                     TextNode("second image", text_type_image, "https://i.imgur.com/3elNhQu.png")]
+                                     )
+    
+    def test_split_link(self):
+        node = TextNode('This is text with a [google](https://www.google.com) and another [facebook](https://www.facebook.com)', text_type_text)
+        new_nodes = split_nodes_links([node])
+        self.assertEqual(new_nodes, [TextNode("This is text with a ", text_type_text),
+                                     TextNode('google', text_type_link, 'https://www.google.com'),
+                                     TextNode(" and another ", text_type_text),
+                                     TextNode('facebook', text_type_link, 'https://www.facebook.com')]
+                                     )
 
 if __name__ == '__main__':
     unittest.main()
