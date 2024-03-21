@@ -38,6 +38,7 @@ def generate_page(source_path: str, template_path: str, target_path: str) -> Non
     log = logging.getLogger(f'generate_page')
     print(f'Generating page from {source_path} to {target_path} using {template_path}')
     log.debug(f'Generating page from {source_path} to {target_path} using {template_path}')
+    
     try:
         log.debug(f'Reading markdown file')
         with open(source_path, 'r') as fh:
@@ -59,7 +60,20 @@ def generate_page(source_path: str, template_path: str, target_path: str) -> Non
     template = template.replace('{{ Content }}', content)
     
     try:
-        with open(f'{target_path}/index.html', 'w') as fh:
+        with open(f'{target_path}', 'w') as fh:
             fh.write(template)
     except Exception as e:
         log.debug(f'Unable to write to file: {e}')
+
+def generate_pages_recursive(content_path: str, template_path: str, target_path: str) -> None:
+    log = logging.getLogger(f'generate_pages_recursive')
+    for item in listdir(content_path):
+        source = path.join(content_path, item)
+        target = path.join(target_path, item).replace('.md', '.html')
+        if path.isdir(source):
+            if not path.exists(target):
+                log.debug(f'Creatinging {target} directory.')
+                makedirs(f'{target}')
+            generate_pages_recursive(source, template_path, target)
+        if path.isfile(source):
+            generate_page(source, template_path, target)

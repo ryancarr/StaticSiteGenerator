@@ -1,7 +1,7 @@
 from generate_site import (
     clean_directory,
     copy_directory,
-    generate_page,
+    generate_pages_recursive,
 )
 import logging
 
@@ -18,7 +18,7 @@ def main():
     print('Beginning site generation process')
     clean_directory(static_dir, public_dir)
     copy_directory(static_dir, public_dir)
-    generate_page(f'{content_dir}/index.md', template_html, public_dir)
+    generate_pages_recursive(content_dir, template_html, public_dir)
 
 if __name__ == '__main__':
     main()
