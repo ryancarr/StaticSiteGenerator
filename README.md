@@ -1,4 +1,6 @@
 # StaticSiteGenerator
+This is the second guided project from [boot.dev](https://www.boot.dev/)
+
 Static Site Generator builds and hosts a webserver. Core site functionality like CSS stylesheets, images and so on should be placed in the **static** folder.
 
 Content is generated from markdown files placed in the **content** folder.
